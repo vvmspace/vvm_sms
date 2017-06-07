@@ -1,0 +1,112 @@
+<?php
+function vvm_sms_send($number, $text) {
+  $ch = curl_init("http://sms.ru/sms/send");
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, array(
+
+    "api_id" => variable_get('vvm_sms_api_id', ''),
+    "to" => $number,
+    "text" => $text,
+    "partner_id" => 194100 
+  ));
+  $body = curl_exec($ch);
+  curl_close($ch);
+  return array(
+    'sms_ru_response' => $body,
+  );
+}
+
+function vvm_sms_send_admin($text) {
+  return vvm_sms_send(variable_get('vvm_sms_admin_phone'), $text);
+}
+
+function vvm_sms_init() {
+//	vvm_sms_send('+79530011203', 'Проверка');
+}
+
+function vvm_sms_form_admin() {
+  $form = array();
+  $form['vvm_sms_api_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Api ID'),
+    '#default_value' => variable_get('vvm_sms_api_id', ''),
+    '#size' => 40,
+    '#maxlength' => 50,
+    '#description' => t('Api ID from SMS.ru account'),
+    '#required' => TRUE
+  );
+  $form['vvm_sms_admin_phone'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Admin phone number'),
+    '#default_value' => variable_get('vvm_sms_admin_phone', ''),
+    '#size' => 40,
+    '#maxlength' => 50,
+    '#description' => t('Admin phone number (Ex.: +791234567890)'),
+    '#required' => FALSE
+  );
+  return system_settings_form($form);
+}
+
+function vvm_sms_rules_action_info() {
+  return array(
+    'vvm_sms_send' => array(
+      'label' => t('Send SMS'),
+      'module' => 'vvm_sms',
+      'parameter' => array(
+        'phone' => array(
+          'type' => 'text',
+          'label' => t('Phone number'),
+          'description' => t('Ex.: +79134567890'),
+        ),
+        'text' => array(
+          'type' => 'text',
+          'label' => t('Text'),
+          'description' => t('Text of SMS message'),
+        ),
+      ),
+      'provides' => array(
+        'sms_ru_response' => array(
+          'type' => 'text',
+          'label' => t('Response from SMS.ru'),
+        ),
+      ),
+      'group' => t('vvm')
+    ),
+    'vvm_sms_send_admin' => array(
+      'label' => t('Send SMS to administrator'),
+      'module' => 'vvm_sms',
+      'parameter' => array(
+        'text' => array(
+          'type' => 'text',
+          'label' => t('Text'),
+          'description' => t('Text of SMS message'),
+        ),
+      ),
+      // 'provides' => array(
+      // 	'sms_ru_response' => array(
+      // 		'type' => 'text',
+      // 		'label' => t('Response from SMS.ru'),
+      // 	),
+      // ),
+      'group' => t('VVM')
+    ),
+  );
+}
+
+function vvm_sms_menu() {
+  $items = array();
+  $items['admin/config/vvm_sms'] = array(
+    'title' => 'VVM SMS',
+    'description' => 'Configuration for VVM SMS module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('vvm_sms_form_admin'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+function vvm_sms_balance() {
+
+}

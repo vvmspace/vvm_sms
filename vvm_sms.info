@@ -1,0 +1,4 @@
+name = VVM SMS
+description = Отправка SMS в Drupal 7 при помощи Rules по средствам сервиса SMS.ru
+core = 7.x
+version = 7.01
