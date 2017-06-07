@@ -68,10 +68,10 @@ function vvm_sms_rules_action_info() {
       'provides' => array(
         'sms_ru_response' => array(
           'type' => 'text',
-          'label' => t('Response from SMS.ru'),
+          'label' => t('Response from SMS.ru [not used]'),
         ),
       ),
-      'group' => t('vvm')
+      'group' => t('VVM')
     ),
     'vvm_sms_send_admin' => array(
       'label' => t('Send SMS to administrator'),
