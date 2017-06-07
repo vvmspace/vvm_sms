@@ -1,4 +1,4 @@
-#Отправка SMS через Drupal 7 Rules
+# Отправка SMS через Drupal 7 Rules
 
 ## Правило Send SMS | Send SMS Rule
 Правило для отправки SMS средствами Drupal 7 Rules. Можно использовать для SMS рассылок
